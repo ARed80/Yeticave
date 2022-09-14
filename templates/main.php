@@ -28,8 +28,9 @@
                             <span class="lot__cost"><?= htmlspecialchars(format_price($ad['price'])) ?></span>
 
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <?php $time_left = time_left($ad['end_date']) ?>
+                        <div class="lot__timer timer <?php if ($time_left[0] < 1): ?> timer--finishing <?php endif; ?>">
+                        <?= "$time_left[0]: $time_left[1]" ?>
                         </div>
                     </div>
                 </div>
