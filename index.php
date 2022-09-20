@@ -10,7 +10,7 @@ require_once('functions.php');
 require_once('data.php');
 
 $page_content = include_template('main.php', [
-    'ads' => $ads,
+    'lots' => $lots,
     'categories' => $categories
 ]);
 

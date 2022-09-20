@@ -15,15 +15,15 @@ function format_price($price)
 
 /**
  * Вычисляет оставщееся время до окончания торгов для лота в формате ЧЧ ММ
- * @param string $end_date - дата окончания торгов для лота
+ * @param string $final_date - дата окончания торгов для лота
  * @return array - массив, в котором первое число - это количество часов, а второе - это количество минут
  */
-function time_left($end_date)
+function time_left($final_date)
 {
     $cur_time = strtotime('now');
-    $end_date = strtotime($end_date);
+    $final_date = strtotime($final_date);
 
-    $time_left = $end_date - $cur_time;
+    $time_left = $final_date - $cur_time;
     $hours_left = floor($time_left / 3600);
 
     $time_left = $time_left - $hours_left * 3600;
