@@ -34,4 +34,60 @@ VALUES
     (8100, 1, 3),
     (5450, 1, 6);
 
+/*    получить все категории;   */
 SELECT * FROM categories;
+
+/*    получить самые новые (к примеру 2 самых новых), открытые лоты. Каждый лот должен включать название, стартовую цену, ссылку на изображение, цену, название категории;    */
+SELECT
+    lot_title               AS Название_лота,
+    start_price             AS Начальная_цена,
+    img_url                 AS Ссылка_на_картинку,
+    query_in.max_bet_price  AS Последняя_цена_лота,
+    category_title          AS Название_категории,
+    date_of_create          AS Дата_создания_лота
+FROM lots
+    LEFT JOIN 
+        (SELECT lot_id, MAX(bet_price) AS max_bet_price
+        FROM bets
+        GROUP BY lot_id) query_in ON lots.id = query_in.lot_id
+    JOIN categories ON lots.category_id = categories.id
+WHERE final_date > CURRENT_TIMESTAMP
+ORDER BY date_of_create DESC
+LIMIT 2;
+
+/*  показать последнюю цену лота    */
+SELECT lot_id, MAX(bet_price) AS max_bet_price
+FROM bets
+GROUP BY lot_id;
+
+/*    показать лот по его ID. Получите также название категории, к которой принадлежит лот;     */
+SELECT    
+    lots.date_of_create         AS Дата_создания_лота,
+    lots.lot_title              AS Название_лота,
+    lots.lot_description        AS Описание_лота,
+    lots.img_url                AS Ссылка_на_картинку,
+    lots.start_price            AS Начальная_цена,
+    lots.final_date             AS Дата_закрытия_лота,
+    lots.bet_step               AS Шаг_ставки,
+    users.user_name             AS Создатель_лота,
+    categories.category_title   AS Название_категории
+FROM lots
+    JOIN categories ON lots.category_id = categories.id
+    JOIN users ON lots.user_id = users.id
+WHERE lots.id = 1;
+
+/*    обновить название лота по его идентификатору;     */
+UPDATE lots
+SET lot_title = '2014 Rossignol District Red Snowboard'
+WHERE id = 1;
+
+/*    получить список ставок для лота по его идентификатору с сортировкой по дате;      */
+SELECT
+    bets.id             AS id_ставки,
+    bets.date_of_bet    AS Дата_ставки,
+    bets.bet_price      AS Цена_ставки,
+    users.user_name     AS Имя_поставившего    
+FROM bets
+    JOIN users ON bets.user_id = users.id
+WHERE bets.lot_id = 3
+ORDER BY bets.date_of_bet;
